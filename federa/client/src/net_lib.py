@@ -11,7 +11,6 @@ from torch.utils.data import DataLoader
 
 
 from .data_utils import distributionDataloader
-from .distribution import data_distribution
 from .get_data import  get_data
 # DEVICE = torch.device("cuda:2" if torch.cuda.is_available() else "cpu")
 # #device id  of this should be same in client_lib device
@@ -20,10 +19,7 @@ def load_data(config):
     trainset, testset = get_data(config)
     # Data distribution for non-custom datasets
     if config['dataset'] != 'CUSTOM':
-        data_distribution(config, trainset)
-        data_path = os.path.join(os.getcwd(), 'Distribution/', config['dataset'],
-                                 'data_split_niid_'+ str(config['niid'])+'.pt')
-        datasets = distributionDataloader(config,  trainset, data_path)
+        datasets = distributionDataloader(config,  trainset, config['datapoints'], config['client_idx'])
         trainloader = DataLoader(datasets, batch_size= config['batch_size'], shuffle=True)
         testloader = DataLoader(testset, batch_size=config['batch_size'])
         num_examples = {"trainset": len(datasets), "testset": len(testset)}

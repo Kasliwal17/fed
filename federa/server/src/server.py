@@ -3,6 +3,8 @@ from .client_connection_servicer import ClientConnectionServicer
 
 from .verification import verify
 from .server_evaluate import server_eval
+from .distribution import data_distribution
+from .server_lib import get_data
 
 import grpc
 from grpc import ssl_server_credentials
@@ -73,10 +75,12 @@ def server_runner(client_manager, configurations):
         control_variate2 = None
 
     #run FL for given rounds
+    _, trainset = get_data(configurations)
+    datapoints = data_distribution(configurations, trainset, client_manager.num_connected_clients())
     client_manager.accepting_connections = accept_conn_after_FL_begin
     config_dict = {"epochs": epochs, "timeout": timeout, "algorithm":algorithm, "message":"train",
                    "dataset":dataset, "net":net, "resize_size":resize_size, "batch_size":batch_size,
-                   "niid": niid, "carbon-tracker":carbon}
+                   "niid": niid, "carbon-tracker":carbon, "datapoints":datapoints}
     for round in range(1, communRound + 1):
         clients = client_manager.random_select(client_manager.num_connected_clients(), fraction_of_clients)
 

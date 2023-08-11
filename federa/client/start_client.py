@@ -6,7 +6,7 @@ parser.add_argument("--ip", type=str, default = "localhost:8214", help="IP addre
 parser.add_argument("--device", type=str, default = "cpu", help="Device to run the client on")
 parser.add_argument('--ca', type = str, default= 'ca.pem', help= 'path to CA certificate')
 parser.add_argument('--encryption', type = int, default= 0, help= '1 enables ssl encryption')
-parser.add_argument('--wait_time', type = int, default= 30, help= 'time to wait before sending the next request')
+parser.add_argument('--wait_time', type = int, default= 5, help= 'time to wait before sending the next request')
 
 args = parser.parse_args()
 
