@@ -100,8 +100,12 @@ def server_runner(client_manager, configurations):
 
         if verification:
             print("Performing verification round...")
-            selected_state_dicts = verify(clients,
-                        trained_model_state_dicts, save_dir_path, threshold=verification_threshold)
+            if algorithm in ('fedavg','feddyn','mime','mimelite'):
+                selected_state_dicts = verify(clients,
+                        trained_model_state_dicts, save_dir_path, verification_threshold)
+            else:
+                selected_state_dicts = verify(clients,
+                            trained_model_state_dicts, save_dir_path, verification_threshold, server_model_state_dict)
             print(f"\nAggregating {len(selected_state_dicts)}/{len(trained_model_state_dicts)} clients above threshold")
         else:
             selected_state_dicts = trained_model_state_dicts

@@ -3,9 +3,16 @@ from random import randint
 from collections import OrderedDict
 from concurrent import futures
 
-def verify(clients, trained_model_state_dicts, save_dir_path, threshold = 0):
+def verify(clients, trained_model_state_dicts, save_dir_path, threshold = 0, server_model_state_dict = None):
     verification_dict = OrderedDict()
     config_dict = {"message": "verify"}
+
+    ##if server_model_state_dict is not None then to each trained_model_state_dict, we need to add the server_model_state_dict
+    if server_model_state_dict is not None:
+        for i in range(len(trained_model_state_dicts)):
+            for key in server_model_state_dict.keys():
+                trained_model_state_dicts[i][key] += server_model_state_dict[key]
+            
     for i, client in zip( range(len(clients)), clients):
         verification_dict[client.client_id] = {"client_wrapper_object": client, "model": trained_model_state_dicts[i]}
     client_ids = list(verification_dict.keys())
