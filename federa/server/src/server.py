@@ -101,11 +101,11 @@ def server_runner(client_manager, configurations):
         if verification:
             print("Performing verification round...")
             if algorithm in ('fedavg','feddyn','mime','mimelite'):
-                selected_state_dicts = verify(clients,
-                        trained_model_state_dicts, save_dir_path, verification_threshold)
+                selected_state_dicts, selected_control_variates = verify(clients,
+                        trained_model_state_dicts, save_dir_path, verification_threshold, updated_control_variates)
             else:
-                selected_state_dicts = verify(clients,
-                            trained_model_state_dicts, save_dir_path, verification_threshold, server_model_state_dict)
+                selected_state_dicts, selected_control_variates = verify(clients,
+                            trained_model_state_dicts, save_dir_path, verification_threshold, updated_control_variates, server_model_state_dict)
             print(f"\nAggregating {len(selected_state_dicts)}/{len(trained_model_state_dicts)} clients above threshold")
         else:
             selected_state_dicts = trained_model_state_dicts
@@ -114,10 +114,10 @@ def server_runner(client_manager, configurations):
         # then send to some client to evaluate
         if control_variate2:
             server_model_state_dict, control_variate, control_variate2 = aggregator.aggregate(server_model_state_dict,
-                                                    control_variate, selected_state_dicts, updated_control_variates)
+                                                    control_variate, selected_state_dicts, selected_control_variates)
         elif control_variate:
             server_model_state_dict, control_variate = aggregator.aggregate(server_model_state_dict,
-                                        control_variate, selected_state_dicts, updated_control_variates)
+                                        control_variate, selected_state_dicts, selected_control_variates)
         else:
             server_model_state_dict = aggregator.aggregate(server_model_state_dict,selected_state_dicts)
 
