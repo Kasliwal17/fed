@@ -28,13 +28,14 @@ def verify(clients, trained_model_state_dicts, save_dir_path, threshold = 0, upd
             assigned_client_id = client_info["assigned_client_id"]
             assigned_client = verification_dict[assigned_client_id]["client_wrapper_object"]
             model_to_verify = client_info["model"]
+            config_dict['client_id'] = client_id
             result_futures.append(executor.submit(assigned_client.evaluate, model_to_verify, config_dict))
 
 
         verification_results = [result_future.result() for result_future in futures.as_completed(result_futures)]
 
-        for client_id, index in zip(verification_dict.keys(), range(len(verification_results))):
-            verification_dict[client_id]["score"] = verification_results[index]["eval_accuracy"]
+        for index in range(len(verification_results)):
+            verification_dict[verification_results[index]["client_id"]]["score"] = verification_results[index]["eval_accuracy"]
 
 
     selected_client_models, ignored_client_models, selected_control_variates = [], [], []

@@ -27,7 +27,7 @@ def evaluate(eval_order_message, device):
 
     config_dict_bytes = eval_order_message.configDict
     config_dict = json.loads( config_dict_bytes.decode("utf-8") )
-
+    client_id = config_dict["client_id"]
     state_dict = model_parameters
     print("Evaluation:",config_dict)
     with open("config.json", "r", encoding='utf-8') as jsonfile:
@@ -43,7 +43,7 @@ def evaluate(eval_order_message, device):
 
     eval_loss, eval_accuracy = test_model(model, testloader, device)
 
-    response_dict = {"eval_loss": eval_loss, "eval_accuracy": eval_accuracy}
+    response_dict = {"eval_loss": eval_loss, "eval_accuracy": eval_accuracy, "client_id": client_id}
     response_dict_bytes = json.dumps(response_dict).encode("utf-8")
     eval_response_message = EvalResponse(responseDict = response_dict_bytes)
     return eval_response_message
