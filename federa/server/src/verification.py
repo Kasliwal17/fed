@@ -81,7 +81,7 @@ def verify(clients, trained_model_state_dicts, save_dir_path, threshold = 0, upd
         file.write( f"{ignored_info_dict}\n" )
 
 
-    return selected_client_models
+    return selected_client_models, selected_control_variates
 
 
 def random_derangement(list_to_shuffle):
