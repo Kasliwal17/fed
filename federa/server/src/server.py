@@ -109,6 +109,7 @@ def server_runner(client_manager, configurations):
             print(f"\nAggregating {len(selected_state_dicts)}/{len(trained_model_state_dicts)} clients above threshold")
         else:
             selected_state_dicts = trained_model_state_dicts
+            selected_control_variates = updated_control_variates
 
         #aggregate model, save it, then send to some client to evaluate#aggregate model, save it,
         # then send to some client to evaluate
