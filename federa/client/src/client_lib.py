@@ -110,6 +110,11 @@ def train(train_order_message, device):
     data_to_send_bytes = buffer.read()
 
     print("Evaluation")
+    
+    if config_dict['algorithm'] not in ('fedavg','feddyn','mime','mimelite'):
+        for key in trained_model_parameters:
+            trained_model_parameters[key] += model_parameters[key]
+
     train_loss, train_accuracy = test_model(model, testloader, device)
     response_dict = {"train_loss": train_loss, "train_accuracy": train_accuracy}
     response_dict_bytes = json.dumps(response_dict).encode("utf-8")
