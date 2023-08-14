@@ -5,7 +5,7 @@ import torch
 #averages all of the given state dicts
 class feddyn():
 
-    def __init__(self):
+    def __init__(self, config):
         self.algorithm = "FedDyn"
         self.lr = 1.0
         self.momentum = 0.9
