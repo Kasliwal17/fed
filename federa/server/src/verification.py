@@ -2,6 +2,7 @@
 from random import randint
 from collections import OrderedDict
 from concurrent import futures
+import copy
 
 ##modify the verify function to consider the updated control variates also
 def verify(clients, trained_model_state_dicts, save_dir_path, threshold = 0, updated_control_variates = None, server_model_state_dict = None):
@@ -23,13 +24,13 @@ def verify(clients, trained_model_state_dicts, save_dir_path, threshold = 0, upd
 
     with futures.ThreadPoolExecutor(max_workers = 20) as executor:
         result_futures = []
-
         for client_id, client_info in verification_dict.items():
             assigned_client_id = client_info["assigned_client_id"]
             assigned_client = verification_dict[assigned_client_id]["client_wrapper_object"]
             model_to_verify = client_info["model"]
             config_dict['client_id'] = client_id
-            result_futures.append(executor.submit(assigned_client.evaluate, model_to_verify, config_dict))
+            config_dict_s = copy.deepcopy(config_dict)
+            result_futures.append(executor.submit(assigned_client.evaluate, model_to_verify, config_dict_s))
 
 
         verification_results = [result_future.result() for result_future in futures.as_completed(result_futures)]
