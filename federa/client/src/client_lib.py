@@ -21,6 +21,8 @@ fl_timestamp = f"{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}"
 save_dir_path = f"client_checkpoints/{fl_timestamp}"
 os.makedirs(save_dir_path)
 
+prev_grads = None
+
 def evaluate(eval_order_message, device):
     model_parameters_bytes = eval_order_message.modelParameters
     model_parameters = torch.load( BytesIO(model_parameters_bytes), map_location="cpu" )
@@ -83,7 +85,8 @@ def train(train_order_message, device):
     elif config_dict['algorithm'] == 'fedavg':
         model = train_fedavg(model, trainloader, epochs, device, deadline)
     elif config_dict['algorithm'] == 'feddyn':
-        model = train_feddyn(model, trainloader, epochs, device, deadline)
+        global prev_grads
+        model, prev_grads = train_feddyn(model, trainloader, epochs, device, deadline, prev_grads)
     else:
         model = train_model(model, trainloader, epochs, device, deadline)
 
