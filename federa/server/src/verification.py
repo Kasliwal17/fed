@@ -82,7 +82,11 @@ def verify(clients, trained_model_state_dicts, save_dir_path, threshold = 0, upd
     with open(f"{save_dir_path}/verification_ignored_stats.txt", "a", encoding='UTF-8') as file:
         file.write( f"{ignored_info_dict}\n" )
 
-
+    if server_model_state_dict is not None:
+        for i in range(len(trained_model_state_dicts)):
+            for key in server_model_state_dict.keys():
+                trained_model_state_dicts[i][key] -= server_model_state_dict[key]
+                
     return selected_client_models, selected_control_variates
 
 
